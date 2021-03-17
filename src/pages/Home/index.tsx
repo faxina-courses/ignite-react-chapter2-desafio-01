@@ -24,11 +24,13 @@ interface CartItemsAmount {
 const Home = (): JSX.Element => {
   const [products, setProducts] = useState<ProductFormatted[]>([]);
   const { addProduct, cart } = useCart();
-
   const cartItemsAmount = cart.reduce((sumAmount, product) => {
-    sumAmount[product.id] += product.amount;
+    sumAmount[product.id] = product.amount || 0 + 1;
     return sumAmount;
   }, {} as CartItemsAmount);
+
+  console.log('cartItemsAmount', cartItemsAmount);
+  console.log('products', products);
 
   useEffect(() => {
     async function loadProducts() {
@@ -41,7 +43,7 @@ const Home = (): JSX.Element => {
   }, []);
 
   function handleAddProduct(id: number) {
-    // TODO
+    addProduct(id);
   }
 
   return (
@@ -54,7 +56,7 @@ const Home = (): JSX.Element => {
           <button
             type='button'
             data-testid='add-product-button'
-            // onClick={() => handleAddProduct(product.id)}
+            onClick={() => handleAddProduct(id)}
           >
             <div data-testid='cart-product-quantity'>
               <MdAddShoppingCart size={16} color='#FFF' />
