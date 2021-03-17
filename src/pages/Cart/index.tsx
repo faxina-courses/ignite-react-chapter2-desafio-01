@@ -28,20 +28,27 @@ const Cart = (): JSX.Element => {
 
   const total = formatPrice(
     cart.reduce((sumTotal, product) => {
-      return (sumTotal += product.id * product.amount);
+      sumTotal += product.price * product.amount;
+      return sumTotal;
     }, 0)
   );
 
   function handleProductIncrement(product: Product) {
-    // TODO
+    updateProductAmount({
+      productId: product.id,
+      amount: product.amount + 1,
+    });
   }
 
   function handleProductDecrement(product: Product) {
-    // TODO
+    updateProductAmount({
+      productId: product.id,
+      amount: product.amount - 1,
+    });
   }
 
   function handleRemoveProduct(productId: number) {
-    // TODO
+    removeProduct(productId);
   }
 
   return (
@@ -58,7 +65,7 @@ const Cart = (): JSX.Element => {
         </thead>
         <tbody>
           {cartFormatted.map((product) => (
-            <tr data-testid='product'>
+            <tr key={product.id} data-testid='product'>
               <td>
                 <img src={product.image} alt={product.title} />
               </td>
@@ -80,7 +87,7 @@ const Cart = (): JSX.Element => {
                     type='text'
                     data-testid='product-amount'
                     readOnly
-                    value={2}
+                    value={product.amount}
                   />
                   <button
                     type='button'
